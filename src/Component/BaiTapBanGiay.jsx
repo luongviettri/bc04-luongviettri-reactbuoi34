@@ -3,71 +3,19 @@ import ListSanPham from './ListSanPham'
 import Modal from './Modal'
 import XemChiTiet from './XemChiTiet'
 import dataShoe from './data_shoe'
-
-
-export default class BaiTapBanGiay extends Component {
-    state = {
-        sanPhamChiTiet: "",
-        gioHang: []
-    }
-    xuLyChiTiet = (shoe) => {
-        this.setState({
-            sanPhamChiTiet: shoe
-        })
-    }
-    xuLyThemGioHang = (shoe) => {
-        // ! nếu chưa có, nếu đã có
-        let index = this.state.gioHang.findIndex((sanPham) => {
-            return sanPham.id == shoe.id
-        })
-        if (index !== -1) { //! nếu đã có
-            let newGioHang = [...this.state.gioHang];
-            newGioHang[index].soLuong += 1;
-            this.setState({
-                gioHang: newGioHang
-            })
-        } else { // ! nếu chưa có
-            let newGioHang = [...this.state.gioHang, { ...shoe, soLuong: 1 }];
-            this.setState({
-                gioHang: newGioHang
-            })
-        }
-    }
+import { connect } from 'react-redux'
+class BaiTapBanGiay extends Component {
     xuLyTongGioHang = () => {
-        let sum = 0;
-        for (let i = 0; i < this.state.gioHang.length; i++) {
-            sum += this.state.gioHang[i].soLuong;
-        }
-        return sum;
-    }
-    xuLyTangGiam = (index, tangGiam) => {
-        let newGioHang = [...this.state.gioHang];
-        tangGiam ?
-            newGioHang[index].soLuong += 1
-            :
-            newGioHang[index].soLuong > 1 ?
-                newGioHang[index].soLuong -= 1
-                :
-                newGioHang[index].soLuong = 1
-        this.setState({
-            gioHang: newGioHang
-        })
-    }
-    xuLyXoa = (index) => {
-        let newGioHang = [...this.state.gioHang];
-        newGioHang.splice(index, 1);
-        this.setState({
-            gioHang: newGioHang
-        })
+        let { gioHang } = this.props;
+        let tongTien = gioHang.reduce((sum, sanPham, index) => {
+            return sum += sanPham.soLuong
+        }, 0)
+        return tongTien;
     }
     render() {
         return (
             <div className='container-fluid my-5' >
                 <Modal
-                    gioHang={this.state.gioHang}
-                    xuLyTangGiam={this.xuLyTangGiam}
-                    xuLyXoa={this.xuLyXoa}
-
                 />
                 <div className="row justify-content-end mx-2"
                     style={{
@@ -86,10 +34,6 @@ export default class BaiTapBanGiay extends Component {
                 <div className="row my-2">
                     <div className="col-8">
                         <ListSanPham
-                            dataShoe={dataShoe}
-                            xuLyChiTiet={this.xuLyChiTiet}
-                            xuLyThemGioHang={this.xuLyThemGioHang}
-
                         />
                     </div>
                     <div className="col-4"
@@ -100,7 +44,6 @@ export default class BaiTapBanGiay extends Component {
                         }}
                     >
                         <XemChiTiet
-                            sanPhamChiTiet={this.state.sanPhamChiTiet}
                         />
                     </div>
 
@@ -109,3 +52,7 @@ export default class BaiTapBanGiay extends Component {
         )
     }
 }
+const mapStateToProps = (state) => ({
+    gioHang: state.BanGiayReducer.gioHang
+})
+export default connect(mapStateToProps)(BaiTapBanGiay)

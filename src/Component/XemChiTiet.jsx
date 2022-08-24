@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-
-export default class XemChiTiet extends Component {
+import { connect } from 'react-redux';
+class XemChiTiet extends Component {
     render() {
-        let { name, price, description, image } = this.props.sanPhamChiTiet
+        let { name, price, description, image } = this.props.sanPhamChiTiet;
         return (
             <div>
                 {
@@ -18,10 +18,14 @@ export default class XemChiTiet extends Component {
                             </div>
                         </>
                         :
-                        <h2 className='my-5'>Chọn một sản phẩm để hiển thị nà</h2>
+                        <h2 className='my-5 mx-2 text-primary'>Chọn một sản phẩm để hiển thị nà</h2>
                 }
             </div>
-
         )
     }
 }
+const mapStateToProps = (state) => ({
+    sanPhamChiTiet: state.BanGiayReducer.sanPhamChiTiet
+})
+
+export default connect(mapStateToProps)(XemChiTiet);

@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
+import { actionAddToCart, actionDetailProduct } from '../redux/Actions/BanGiayActions';
 class SanPham extends Component {
+    xuLyChiTiet = (shoe) => {
+        this.props.dispatch(actionDetailProduct(shoe))
+    }
+    xuLyThemGioHang = (shoe) => {
+        this.props.dispatch(actionAddToCart(shoe))
+    }
     render() {
-        let { shoe, xuLyChiTiet, xuLyThemGioHang } = this.props
+        let { shoe } = this.props;
         return (
             <div className="col-3 my-2"
             >
@@ -27,12 +34,12 @@ class SanPham extends Component {
                     >
                         <button
                             onClick={() => {
-                                xuLyThemGioHang(shoe)
+                                this.xuLyThemGioHang(shoe)
                             }}
                             className='btn btn-success my-1'>Add to cart</button>
                         <button className='btn btn-warning my-1'
                             onClick={() => {
-                                xuLyChiTiet(shoe)
+                                this.xuLyChiTiet(shoe)
                             }}
                         >Detail</button>
                     </div>
@@ -43,4 +50,4 @@ class SanPham extends Component {
     }
 }
 
-export default SanPham;
+export default connect()(SanPham)
